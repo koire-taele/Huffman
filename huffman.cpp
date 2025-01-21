@@ -277,7 +277,8 @@ int main()
     {
         ifstream input("resultE.bin", ios::binary);
         ofstream output("resultD.txt", ios::binary);
-        if (!input.is_open() || !output.is_open()) {
+        if (!input.is_open() || !output.is_open())
+        {
             cout << "Error: cann't open file." << endl;
             exit(1);
         }
