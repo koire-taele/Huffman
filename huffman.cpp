@@ -79,6 +79,7 @@ void writeBin(ofstream & fout, int num) // Для записи частот в �
     bitset<32> bnum(num); string bstr = bnum.to_string(); int len = bstr.length();
     for (int i = 0; i < len; i++)
     {
+        byte = byte << 1;
         if (bstr[i] == '1') byte = byte | marker;
         lim++;
         if (lim == 8)
@@ -87,7 +88,6 @@ void writeBin(ofstream & fout, int num) // Для записи частот в �
             fout.put(byte);
             byte = 0;
         }
-        byte = byte << 1;
     }
 }
 
@@ -111,6 +111,7 @@ void encodedInBin(const string & encoded, ofstream & fout, map<char, int> hTab)
     ofstream bof("buffer.txt", ios::binary);
     for (size_t i = 0; i < encoded.size(); i++)
     {
+        byte = byte << 1;
         if (encoded[i] == '1')
             byte = byte | marker;   
         lim++;
@@ -120,7 +121,6 @@ void encodedInBin(const string & encoded, ofstream & fout, map<char, int> hTab)
             byte = 0;
             lim = 0;
         }
-        byte = byte << 1;
     }
     if (lim > 0) // Запись обрубков в файл
     {
