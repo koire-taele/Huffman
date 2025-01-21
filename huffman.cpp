@@ -279,7 +279,7 @@ int main()
         ofstream output("resultD.txt", ios::binary);
         if (!input.is_open() || !output.is_open())
         {
-            cout << "Error: cann't open file." << endl;
+            cout << "Error: can't open file." << endl;
             exit(1);
         }
         hDecode(input, output);
