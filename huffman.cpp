@@ -5,8 +5,6 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <clocale>
-#include <Windows.h>
 using namespace std;
 
 // реализовано по алгоритму из предложенной преподавателем книги
@@ -261,7 +259,7 @@ void decoder(ifstream & in, ofstream & out)
         huffmanTab.push_back(pair<vector<unsigned char>, string>(utf8char, code));
     }
 
-    unsigned char marker; unsigned char u_symbol; unsigned char byte;
+    unsigned char marker; unsigned char u_symbol;
     while(in.get(symbol))
     {
         u_symbol = symbol;
