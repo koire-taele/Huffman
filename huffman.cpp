@@ -322,7 +322,8 @@ int main()
     {
         ifstream dinput("resultE.bin", ios::binary);
         ofstream doutput("resultD.txt", ios::binary);
-        if (!dinput.is_open() || !doutput.is_open()) {
+        if (!dinput.is_open() || !doutput.is_open())
+        {
             cout << "Error: can't open file." << endl;
             exit(1);
         }
