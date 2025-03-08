@@ -100,8 +100,8 @@ void encoder(ifstream & in, ofstream & out)
             codes.push_back("");
         }
 
-        // по алгоритму, предложенному в книге, складываются вероятности два последних элементов в таблице,
-        // т.к. таблица отсортирована, то эти два элемента - два последних элемента в таблице
+        // по алгоритму, предложенному в книге, складываются вероятности двух последних элементов в отсортированной таблице, им назначаются элементы кодовых слов,
+        // две строки объединяются в одну и таблица сортируется заново, и так в цикл, пока не останется два элемента в таблице; эти действия и выполняются в коде ниже
 
         vector<pair<vector<int>, int>> freqIndexes; // для сопоставления сумм частот и индексов символов, чьи частоты складывались
         for (int i = 0; i < size; i++)
@@ -156,11 +156,11 @@ void encoder(ifstream & in, ofstream & out)
         vector<pair<vector<unsigned char>, string>> huffmanTab; // составление таблицы Хаффмана
         for (int i = 0; i < size; i++) huffmanTab.push_back(pair<vector<unsigned char>, string>(frequencies[i].first, codes[i]));
         in.close();
-        in.open("text.txt");
+        in.open("text.txt"); // переоткрываем файл, чтобы начать читать его с начала
         int index;
         int textLength = 0;
         string result = ""; // составление закодированного текста
-        while (in.get(symbol))
+        while (in.get(symbol)) // здесь происходит поиск в символа таблице Хаффмана и одновременно подсчитывается длина текста, это будет нужно в дальнейшем
         {
             utf8char = UTF8_Handler(in, symbol);
             index = 0;
@@ -170,7 +170,6 @@ void encoder(ifstream & in, ofstream & out)
         }
         
         out << textLength << ' ' << result.length() << ' '; // запись длины текста оригинального и зашифрованного, чтобы потом правильно декодировать
-        
         // запись таблицы Хаффмана в файл; в первой строке пишем кол-во строк в таблице, чтобы потом верно считать её из файла с закодированным текстом
         out << size << endl;
         for (int i = 0; i < size; i++)
@@ -260,9 +259,9 @@ void decoder(ifstream & in, ofstream & out)
     }
 
     unsigned char marker; unsigned char u_symbol;
-    while(in.get(symbol))
+    while(in.get(symbol)) // здесь читаем сам закодированный текст и переносим его в более удобный для обработки вид
     {
-        u_symbol = symbol;
+        u_symbol = symbol; // функция get не даёт читать напрямую в переменную типа char, хотя во многих справочных материалах указано обратное, но у меня при таком выдавало ошибку
         marker = 128;
         for (int i = 0; i < 8; i++)
         {
@@ -273,12 +272,12 @@ void decoder(ifstream & in, ofstream & out)
     }
 
     string another_code;
-    for (int i = 0; i < encodedLength; i++)
+    for (int i = 0; i < encodedLength; i++) // здесь уже идёт сама декодировка; так как C++ даёт читать минимум один байт из файла, в самом конце полученный из файла закодированный текст будет немного отличаться от изначального закодированного текста, поэтому мы ограничиваем цикл именно по длине, подсчитанной ранее и указанной в начале файла, чтобы исключить обработку мусора как важные данные
     {
-        another_code += toDecode[i];
+        another_code += toDecode[i]; // в another_code пишется по одному символу из декодированного сообщения, пока не найдётся кодовое слово из таблицы Хаффмана, равное another_code
         for (int j = 0; j < size; j++)
         {
-            if (another_code == huffmanTab[j].second)
+            if (another_code == huffmanTab[j].second) // после нахождения соответствующий символ пишется в файл, another_code очищается и цикл начинается заново
             {
                 for (int k = 0; k < huffmanTab[j].first.size(); k++) out.put(huffmanTab[j].first[k]);
                 another_code = "";
