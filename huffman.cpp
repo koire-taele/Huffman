@@ -169,7 +169,8 @@ void encoder(ifstream & in, ofstream & out)
             textLength++;
         }
         
-        out << textLength << ' ' << result.length() << ' '; // запись длины текста оригинального и зашифрованного, чтобы потом правильно декодировать
+        out << result.length() << ' '; // запись длины закодированного текста, чтобы потом правильно декодировать
+        
         // запись таблицы Хаффмана в файл; в первой строке пишем кол-во строк в таблице, чтобы потом верно считать её из файла с закодированным текстом
         out << size << endl;
         for (int i = 0; i < size; i++)
@@ -214,28 +215,18 @@ void decoder(ifstream & in, ofstream & out)
     string data;
     string toDecode = "";
     string code;
-    string strTextLength;
     string strEncodedLength;
     string strHuffSize;
     getline(in, data);
-    bool afterSpaceFirst = false; bool afterSpaceSecond = false;
+    bool afterSpace = false;
     for (int i = 0; i < data.length(); i++)
     {
-        if (data[i] == ' ' && !afterSpaceFirst)
+        if (data[i] == ' ')
         {
-            afterSpaceFirst = true;
+            afterSpace = true;
             continue;
         }
-        if (data[i] == ' ' && !afterSpaceSecond)
-        {
-            afterSpaceSecond = true;
-            continue;
-        }
-        if (!afterSpaceFirst)
-        {
-            strTextLength += data[i];
-        }
-        else if (!afterSpaceSecond)
+        if (!afterSpace)
         {
             strEncodedLength += data[i];
         }
@@ -244,7 +235,6 @@ void decoder(ifstream & in, ofstream & out)
             strHuffSize += data[i];
         }
     }
-    int textLength = stoi(strTextLength);
     int encodedLength = stoi(strEncodedLength);
     int size = stoi(strHuffSize);
     char symbol;
