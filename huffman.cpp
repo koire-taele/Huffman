@@ -158,7 +158,6 @@ void encoder(ifstream & in, ofstream & out)
         in.close();
         in.open("text.txt"); // переоткрываем файл, чтобы начать читать его с начала
         int index;
-        int textLength = 0;
         string result = ""; // составление закодированного текста
         while (in.get(symbol)) // здесь происходит поиск в символа таблице Хаффмана и одновременно подсчитывается длина текста, это будет нужно в дальнейшем
         {
@@ -166,7 +165,6 @@ void encoder(ifstream & in, ofstream & out)
             index = 0;
             while (utf8char != huffmanTab[index].first) index++;
             result += huffmanTab[index].second;
-            textLength++;
         }
         
         out << result.length() << ' '; // запись длины закодированного текста, чтобы потом правильно декодировать
